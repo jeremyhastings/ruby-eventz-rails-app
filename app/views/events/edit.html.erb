@@ -1,0 +1,21 @@
+<h1>Editing <%= @event.name %></h1>
+
+<% # local: true turns off AJAX %>
+<%= form_with(model: @event, local: true) do | form |  %>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+
+  <%= form.label :description %>
+  <%= form.text_area :description, rows: 5 %>
+
+  <%= form.label :location %>
+  <%= form.text_field :location %>
+
+  <%= form.label :price %>
+  <%= form.number_field :price %>
+
+  <%= form.label :starts_at %>
+  <%= form.datetime_select :starts_at, { ampm: true }, { class: "datetime" } %>
+
+  <%= form.submit %>
+<% end %>
