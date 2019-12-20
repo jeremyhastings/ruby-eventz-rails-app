@@ -15,7 +15,7 @@ class EventsController < ApplicationController
   def update
     @event = Event.find(params[:id])
     if @event.update(event_params)
-      redirect_to @event # same as redirect_to event_path(@event)
+      redirect_to @event, notice: "Event successfully updated!" # same as redirect_to event_path(@event)
     else
       render :edit
     end
@@ -28,7 +28,7 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     if @event.save
-      redirect_to @event
+      redirect_to @event, notice: "Event successfully created!"
     else
       render :new
     end
