@@ -1,0 +1,18 @@
+<h1>Registration for <%= link_to @event.name, @event %></h1>
+
+<%# Parent needs to be before the child.  In this instance @event then @registration %>
+<%= form_with(model: [@event, @registration], local: true) do | form | %>
+  <%= render "shared/errors", object: @registration %>
+
+  <%= form.label :name %>
+  <%= form.text_field :name, autofocus: true %>
+
+  <%= form.label :email %>
+  <%= form.email_field :email %>
+
+  <%= form.label :how_heard %>
+  <%= form.select :how_heard, Registration::HOW_HEARD_OPTIONS, prompt: "Pick one" %>
+
+  <%= form.submit %>
+
+<% end %>
