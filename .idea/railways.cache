@@ -8,6 +8,14 @@
                                       PATCH  /events/:event_id/registrations/:id(.:format)                                            registrations#update
                                       PUT    /events/:event_id/registrations/:id(.:format)                                            registrations#update
                                       DELETE /events/:event_id/registrations/:id(.:format)                                            registrations#destroy
+                          event_likes GET    /events/:event_id/likes(.:format)                                                        likes#index
+                                      POST   /events/:event_id/likes(.:format)                                                        likes#create
+                       new_event_like GET    /events/:event_id/likes/new(.:format)                                                    likes#new
+                      edit_event_like GET    /events/:event_id/likes/:id/edit(.:format)                                               likes#edit
+                           event_like GET    /events/:event_id/likes/:id(.:format)                                                    likes#show
+                                      PATCH  /events/:event_id/likes/:id(.:format)                                                    likes#update
+                                      PUT    /events/:event_id/likes/:id(.:format)                                                    likes#update
+                                      DELETE /events/:event_id/likes/:id(.:format)                                                    likes#destroy
                                events GET    /events(.:format)                                                                        events#index
                                       POST   /events(.:format)                                                                        events#create
                             new_event GET    /events/new(.:format)                                                                    events#new
