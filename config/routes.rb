@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :likes
   root "events#index"
 
   resources :events do
