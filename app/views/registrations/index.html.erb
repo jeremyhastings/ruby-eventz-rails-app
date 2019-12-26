@@ -2,7 +2,7 @@
 <ul class="registrations">
   <% @registrations.each do | registration | %>
   <li>
-    <%= registration.name %> &bull; <%= registration.how_heard %>
+    <%= link_to registration.user.name, registration.user %> &bull; <%= registration.how_heard %>
   </li>
   <% end %>
 </ul>
