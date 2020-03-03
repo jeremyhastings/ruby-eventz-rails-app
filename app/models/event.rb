@@ -8,6 +8,12 @@ class Event < ApplicationRecord
   has_many :categorizations, dependent: :destroy
   has_many :categories, through: :categorizations
 
+  has_one_attached :main_image
+
+  # This is behind the scene
+  # has_one :main_image_attachment, dependent: :destroy
+  # has_one :main_image_blob, through: :main_image_attachment
+
   validates :name, presence: true, uniqueness: true
 
   validates :location, presence: true
@@ -18,10 +24,10 @@ class Event < ApplicationRecord
 
   validates :capacity, numericality: { only_integer: true, greater_than: 0 }
 
-  validates :image_file_name, format: {
-      with: /\w+\.(jpg|png)\z/i,
-      message: "must be a JPG or PNG image"
-  }
+  # validates :image_file_name, format: {
+  #     with: /\w+\.(jpg|png)\z/i,
+  #     message: "must be a JPG or PNG image"
+  # }
 
   scope :free, -> { upcoming.where(price: 0.0).order(:name) }
   scope :past, -> { where("starts_at < ?", Time.now).order("starts_at") }
