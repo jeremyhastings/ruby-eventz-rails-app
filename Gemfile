@@ -9,10 +9,10 @@ gem 'rails', '~> 6.0.2'
 group :development, :test do
   gem 'sqlite3', '~> 1.4'
 end
-
 group :production do
   gem 'pg'
 end
+
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
@@ -31,7 +31,10 @@ gem 'bootstrap', '~> 4.3.1'
 gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.2'
+
+# Add AWS
+gem 'aws-sdk-s3', require: false
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
