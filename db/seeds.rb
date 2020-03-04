@@ -97,3 +97,20 @@ Event.create!([
     }.squish
   }
 ])
+
+# To attach images
+# [
+#     ["Bugsmash", "bugsmash.png"],
+#     ["Hackathon", "hackathon.png"],
+#     ["Kata Camp", "katacamp.png"],
+#     ["Coffee 'n Code", "coffee-code.png"],
+#     ["Rails User Group", "rails-user-group.png"],
+#     ["Ruby User Group", "ruby-user-group.png"],
+#     ["5-Minute Lightning Talks", "lightning.png"],
+#     ["Drone Zone", "drone-zone.png"],
+#     ["Coding Ninjas", "ninjas.png"]
+# ].each do |event_name, file_name|
+#   e = Event.find_by(name: event_name)
+#   f = File.open(Rails.root.join("app/assets/images/#{file_name}"))
+#   e.main_image.attach(io: f, filename: file_name)
+# end
