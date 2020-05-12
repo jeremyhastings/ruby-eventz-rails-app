@@ -12,98 +12,106 @@ RubyMine 2019.3, Ruby 2.6.6, and Rails 6.0.2.2 were used to initially make this 
 
 ## FOR REFERENCE:
 
-### Install Bootstrap (via Webpacker not Sprockets)
+### Friendly URL
 
-In the Terminal:
+Generate a new migration that adds a slug column to the events table:
 
-```
-yarn add bootstrap jquery popper.js
-```
-Update config > webpack > environment.js:
-
-```
-const { environment } = require('@rails/webpacker')
-
-const webpack = require("webpack")
-environment.plugins.append("Provide", new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-    Popper: ['popper.js', 'default']
-}))
-
-module.exports = environment
+```shell
+rails generate migration AddSlugToEvents slug
 ```
 
-Update app > javascript > packs > application.js:
+Apply migratation:
 
-```
-import "bootstrap";
-```
-
-Create app > javascript > stylesheets > application.scss:
-
-```
-@import "bootstrap";
+```shell
+rails db:migrate
 ```
 
-Update app > views > layouts > application.html.erb:
+Add validation to make sure event title is unique so the url can be based on a unique source:
 
 ```
-<%= stylesheet_link_tag ... %>
-```
-to
-```
-<%= stylesheet_pack_tag ... %>
+validates :title, presence: true, uniqueness: true
 ```
 
-Update app > javascript > packs > application.js:
+Define a private method in the Event model:
 
-```
-import "../stylesheets/application";
-```
-
-Create app > javascript > packs > custom.js:
-
-```
-// For Bootstrap //////////////////////////
-$(function() {
-    $('[data-toggle="tooltip"]').tooltip();
-});
-
-$(function() {
-    $('[data-toggle="popover"]').popover();
-});
-// For Bootstrap //////////////////////////
+```shell
+def set_slug
+    self.slug = title.parameterize
+end
 ```
 
-Update app > javascript > packs > application.js:
+Use the before_save method to call set_slug prior to every save in the Event Model:
 
-```
-import "./custom";
+```shell
+before_save :set_slug
 ```
 
-### Install Kaminari
+Define a to_param method in the Event Model:
 
-In the Gemfile:
+```shell
+def to_param
+    slug
+end
 ```
-gem 'kaminari'
+
+Update EventsController, RegistrationsController, and LikesController Actions to find events by their slug:
+
+```shell
+def set_event
+    @event = Event.find_by!(slug: params[:id])
 ```
-In the Terminal:
+
+### Scopes and Routes
+
+Create scopes in the Events Model:
+
+```shell
+scope :free, -> { upcoming.where(price: 0.0).order(:name) }
+scope :past, -> { where("starts_at < ?", Time.now).order("starts_at") }
+scope :recent, ->(max=3) { past.limit(max) }
+scope :upcoming, -> { where("starts_at > ?", Time.now).order("starts_at") }
 ```
-rails generate kaminari:config
+
+Create filter route for new scopes in routes.rb:
+
+```shell
+get "events/filter/:filter" => "events#index", as: :filtered_events
 ```
-In the Terminal:
+
+Update Index Action in EventsController to handle :filter params:
+
+```shell
+def index
+  case params[:filter]
+  when "past"
+    @events = Event.past
+  when "free"
+    @events = Event.free
+  when "recent"
+    @events = Event.recent
+  else
+    @events = Event.upcoming
+  end
+end
 ```
-rails generate kaminari:views bootstrap4
+
+Add Links:
+
+```shell
+<li>
+  <%= link_to "Upcoming Events", events_path %>
+</li>
+<li>
+  <%= link_to "Past", filtered_events_path(:past) %>
+</li>
+<li>
+  <%= link_to "Free", filtered_events_path(:free) %>
+</li>
+<li>
+  <%= link_to "Recent", filtered_events_path(:recent) %>
+</li>
 ```
-Index Action of ArticlesController:
-```
-@articles = Article.order(:created_at).page params[:page]
-```
-Index Article View:
-```
-<%= paginate @articles %>
-```
+
 ## Running the tests
 
 Tests to come at a later date.  Want to write some?
@@ -118,8 +126,6 @@ Should easily deploy to Heroku.  Instructions for that at a later date if needed
 * [Ruby on Rails](https://rubyonrails.org) - MVC Framework
 * [RubyMine](https://www.jetbrains.com/ruby/) - IDE
 * [PostgreSQL](https://www.postgresql.org) - Database
-* [Bootstrap](https://getbootstrap.com) - Web Framework
-* [Kaminari](https://github.com/kaminari/kaminari) - A Pagination Gem
 
 ## Contributing
 
